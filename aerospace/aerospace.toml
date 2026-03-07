@@ -183,6 +183,12 @@ alt-shift-semicolon = 'mode service'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+
+# Remove macos hide app shortcuts
+cmd-h = []
+cmd-alt-h = []
+
+
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
@@ -195,3 +201,20 @@ alt-shift-a = ['join-with left', 'mode main']
 alt-shift-s = ['join-with down', 'mode main']
 alt-shift-w = ['join-with up', 'mode main']
 alt-shift-d = ['join-with right', 'mode main']
+alt-c = ['''exec-and-forget osascript -e '
+tell application "Google Chrome"
+    make new window at end of windows
+    activate
+end tell'
+''', 'mode main']
+
+alt-f = ['''exec-and-forget osascript -e '
+tell application "Finder"
+  make new Finder window
+  activate
+end tell'
+''', 'mode main']
+
+# Remove macos hide app shortcuts
+cmd-h = []
+cmd-alt-h = []
