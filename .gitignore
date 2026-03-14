@@ -4,3 +4,7 @@
 **/.DS_Store
 *._.DS_Store
 **/._.DS_Store
+
+nvim/backup/*
+nvim/swap/*
+nvim/undo/*
