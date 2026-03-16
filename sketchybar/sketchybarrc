@@ -1,0 +1,281 @@
+#!/bin/bash
+# ─── Colors ───────────────────────────────────────────
+OX_BG="0x6F171717"
+OX_BORDER="0xFF799496"
+OX_MG="0xffFFFFFF"
+OX_ORG="0xffE65747"
+OX_DIV="0xCC5C5F7A"
+OX_ICON_FONT="Hack Nerd Font:Regular:16.0"
+# ─── Scripts ──────────────────────────────────────────
+mkdir -p /tmp/sketchybar-plugins
+osascript -e 'tell application "System Events" to get name of every process'
+cat >/tmp/sketchybar-plugins/space.sh <<'SCRIPT'
+#!/bin/bash
+INDEX="$(yabai -m query --spaces | jq '.[] | select(."has-focus") | .index')"
+sketchybar --set "$NAME" \
+	label="   $INDEX" \
+	label.font="Source Code Pro:Regular:16.0" \
+	label.color="0xffE65747" \
+	label.align=center \
+	width=35
+SCRIPT
+
+cat >/tmp/sketchybar-plugins/volume.sh <<'SCRIPT'
+#!/bin/bash
+VOL=$(osascript -e "output volume of (get volume settings)")
+MUTED=$(osascript -e "output muted of (get volume settings)")
+if [[ "$MUTED" == "true" ]]; then
+	ICON="󰝟"
+elif (( VOL >= 50 )); then
+	ICON="󰕾"
+else
+	ICON="󰖀"
+fi
+sketchybar --set "$NAME" icon="$ICON"
+SCRIPT
+
+cat >/tmp/sketchybar-plugins/volume_click.sh <<'SCRIPT'
+#!/bin/bash
+MUTED=$(osascript -e "output muted of (get volume settings)")
+if [[ "$MUTED" == "true" ]]; then
+	osascript -e "set volume output muted false"
+else
+	osascript -e "set volume output muted true"
+fi
+bash /tmp/sketchybar-plugins/volume.sh
+SCRIPT
+
+cat >/tmp/sketchybar-plugins/sleep.sh <<'SCRIPT'
+#!/bin/bash
+osascript -e 'tell application "System Events" to sleep'
+SCRIPT
+
+cat >/tmp/sketchybar-plugins/restart.sh <<'SCRIPT'
+#!/bin/bash
+osascript <<EOF
+tell application "System Events"
+	activate
+	set answer to button returned of (display dialog "Restart your Mac?" buttons {"Cancel", "Restart"} default button "Restart" with icon caution)
+	if answer is "Restart" then restart
+end tell
+EOF
+SCRIPT
+
+cat >/tmp/sketchybar-plugins/shutdown.sh <<'SCRIPT'
+#!/bin/bash
+osascript <<EOF
+tell application "System Events"
+	activate
+	set answer to button returned of (display dialog "Shut down your Mac?" buttons {"Cancel", "Shut Down"} default button "Shut Down" with icon caution)
+	if answer is "Shut Down" then shut down
+end tell
+EOF
+SCRIPT
+
+cat >/tmp/sketchybar-plugins/sleep_click.sh <<'SCRIPT'
+#!/bin/bash
+osascript <<EOF
+tell application "System Events"
+	activate
+	set answer to button returned of (display dialog "Sleep?" buttons {"Cancel", "Sleep"} default button "Sleep" with icon caution)
+	if answer is "Sleep" then sleep
+end tell
+EOF
+SCRIPT
+
+cat >/tmp/sketchybar-plugins/battery.sh <<'SCRIPT'
+#!/bin/bash
+PCT=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
+CHARGING=$(pmset -g batt | grep -c "AC Power")
+if (( CHARGING > 0 )); then
+	ICON="󰂄"
+	COLOR="0xff799496"
+elif (( PCT >= 75 )); then
+	ICON="󰁹"
+	COLOR="0xff799496"
+elif (( PCT >= 50 )); then
+	ICON="󰂀"
+	COLOR="0xff799496"
+elif (( PCT >= 25 )); then
+	ICON="󰁾"
+	COLOR="0xffC53A2B"
+else
+	ICON="󰁻"
+	COLOR="0xffC53A2B"
+fi
+sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR"
+SCRIPT
+
+chmod +x /tmp/sketchybar-plugins/*.sh
+
+# ─── Bar ──────────────────────────────────────────────
+sketchybar --bar \
+	position=left \
+	height=60 \
+	sticky=on \
+	topmost=on \
+	shadow=on \
+	y_offset=8 \
+	margin=10 \
+	padding_left=16 \
+	padding_right=16 \
+	color="$OX_BG" \
+	border_color="$OX_BORDER" \
+	border_width=2 \
+	corner_radius=17 \
+	font_smoothing=on
+# ─── Defaults ─────────────────────────────────────────
+sketchybar --default \
+	icon.font="$OX_ICON_FONT" \
+	icon.color="$OX_BORDER" \
+	icon.drawing=off \
+	icon.padding_right=4 \
+	label.font="Source Code Pro:Regular:11.0" \
+	label.color="$OX_MG" \
+	label.align=center \
+	padding_left=6 \
+	padding_right=6
+# ─── Separator helper ─────────────────────────────────
+sb_separator() {
+	local name="sep$RANDOM"
+	sketchybar \
+		--add item "$name" "$1" \
+		--set "$name" \
+		icon.drawing=on \
+		label.drawing=on \
+		icon.width=20 \
+		padding_left="${2:-8}" \
+		padding_right="${3:-8}" \
+		background.drawing=on \
+		background.color="$OX_DIV" \
+		background.height=3 \
+		background.corner_radius=3
+}
+# ─── Events ───────────────────────────────────────────
+sketchybar --add event space_changed
+# ─── Clock ────────────────────────────────────────────
+sketchybar \
+	--add item clock left \
+	--set clock \
+	update_freq=10 \
+	label.font="Source Code Pro:Regular:13.0" \
+	script="sketchybar --set \$NAME label=\"\$(date +%H:%M)\""
+sb_separator left
+# ─── Date ─────────────────────────────────────────────
+sketchybar \
+	--add item day left \
+	--set day \
+	update_freq=120 \
+	padding_left=6 \
+	padding_right=4 \
+	label.color="$OX_BORDER" \
+	label="$(date '+%a')"
+sketchybar \
+	--add item date left \
+	--set date \
+	update_freq=120 \
+	padding_left=6 \
+	padding_right=6 \
+	label.font="Source Code Pro:Regular:14.0" \
+	label.color="$OX_ORG" \
+	label="$(date '+%d' | sed 's/^0//')" \
+	width=18
+sketchybar \
+	--add item month left \
+	--set month \
+	update_freq=120 \
+	padding_left=8 \
+	padding_right=6 \
+	label.color="$OX_BORDER" \
+	label="$(date '+%b')"
+sb_separator left
+# ─── Space ────────────────────────────────────────────
+sketchybar \
+	--add item space_label left \
+	--set space_label \
+	update_freq=120 \
+	padding_left=4 \
+	padding_right=4 \
+	label.color="$OX_BORDER" \
+	label="Space"
+sketchybar \
+	--add item space left \
+	--set space \
+	label.font="Source Code Pro:Regular:16.0" \
+	label.color="$OX_BORDER" \
+	width=40 \
+	padding_left=6 \
+	padding_right=2 \
+	script="/tmp/sketchybar-plugins/space.sh" \
+	--subscribe space space_changed
+sb_separator left 2 8
+# ─── System buttons ───────────────────────────────────
+sketchybar \
+	--add item btn_shutdown right \
+	--set btn_shutdown \
+	icon.drawing=on \
+	icon="󰐥" \
+	icon.color="$OX_ORG" \
+	label.drawing=off \
+	padding_left=6 \
+	padding_right=5 \
+	width=20 \
+	click_script="/tmp/sketchybar-plugins/shutdown.sh"
+sketchybar \
+	--add item btn_restart right \
+	--set btn_restart \
+	icon.drawing=on \
+	icon="󰑐" \
+	icon.color="$OX_BORDER" \
+	label.drawing=off \
+	padding_left=6 \
+	padding_right=8 \
+	width=20 \
+	click_script="/tmp/sketchybar-plugins/restart.sh"
+sketchybar \
+	--add item btn_sleep right \
+	--set btn_sleep \
+	icon.drawing=on \
+	icon="󰒲" \
+	icon.color="$OX_BORDER" \
+	label.drawing=off \
+	padding_left=12 \
+	padding_right=10 \
+	width=24 \
+	click_script="/tmp/sketchybar-plugins/sleep_click.sh"
+sb_separator right 2 8
+
+# ─── Battery ──────────────────────────────────────────
+sketchybar \
+	--add item battery right \
+	--set battery \
+	icon.drawing=on \
+	icon.width=20 \
+	label.drawing=off \
+	update_freq=60 \
+	padding_left=8 \
+	padding_right=12 \
+	width=30 \
+	script="/tmp/sketchybar-plugins/battery.sh" \
+	--subscribe battery power_source_change system_woke
+
+# ─── Volume ───────────────────────────────────────────
+sketchybar \
+	--add item volume right \
+	--set volume \
+	icon.drawing=on \
+	icon.color="$OX_BORDER" \
+	icon.width=20 \
+	label.drawing=off \
+	update_freq=1 \
+	padding_left=6 \
+	padding_right=6 \
+	width=30 \
+	script="/tmp/sketchybar-plugins/volume.sh" \
+	click_script="/tmp/sketchybar-plugins/volume_click.sh" \
+	--subscribe volume volume_change
+
+sb_separator right 0 0
+
+# ─── Force initial run ────────────────────────────────
+sketchybar --update

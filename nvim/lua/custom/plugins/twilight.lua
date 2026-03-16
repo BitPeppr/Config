@@ -5,7 +5,7 @@ return {
       alpha = 0.7,
     },
     treesitter = true,
-    context = 40,
+    context = 45,
     exclude = { 'python' },
   },
 }

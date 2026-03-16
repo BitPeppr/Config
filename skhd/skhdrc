@@ -53,6 +53,10 @@ shift + alt - f : \
     yabai -m window --toggle float; \
     yabai -m window --toggle border
 
+shift + alt - t : yabai -m config window_opacity on
+shift + alt + ctrl - t : yabai -m config window_opacity off
+
+
 # balance size of windows
 shift + alt - tab : yabai -m space --balance
 
