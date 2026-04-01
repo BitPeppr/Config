@@ -170,7 +170,8 @@ sketchybar \
 	label.font="Source Code Pro:Regular:14.0" \
 	label.color="$OX_ORG" \
 	width=18 \
-	script="sketchybar --set \$NAME label=\"\$(date '+%d' | sed 's/^0//')\""
+	label.align=center \
+	script="sketchybar --set \$NAME label=\"\$(date '+%d')\""
 sketchybar \
 	--add item month left \
 	--set month \
