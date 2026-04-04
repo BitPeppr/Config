@@ -9,8 +9,8 @@ return {
       -- These are the default options. Leave the table blank (as in opts = {}) for this config, or customise it yourself!
       char = '░', -- smear character
       hl = 'SmudgeCursor',
-      max_age = 80, -- ms before smear disappears
-      length = 2, -- max trail length
+      max_age = 160, -- ms before smear disappears
+      length = 3, -- max trail length
     },
   },
 }

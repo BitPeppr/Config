@@ -121,6 +121,77 @@ end)
 -- Enable break indent
 vim.o.breakindent = true
 
+-- Folding method
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt.foldenable = true
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldcolumn = '1'
+
+-- Unmap all built-in z commands (use raw API to avoid vim.keymap.del E31 error)
+for _, key in ipairs {
+  'za',
+  'zA',
+  'zb',
+  'zc',
+  'zC',
+  'zd',
+  'zD',
+  'ze',
+  'zE',
+  'zf',
+  'zF',
+  'zg',
+  'zG',
+  'zh',
+  'zH',
+  'zi',
+  'zI',
+  'zj',
+  'zk',
+  'zl',
+  'zL',
+  'zm',
+  'zM',
+  'zn',
+  'zo',
+  'zO',
+  'zp',
+  'zr',
+  'zR',
+  'zs',
+  'zt',
+  'zv',
+  'zw',
+  'zx',
+  'zX',
+  'zz',
+} do
+  vim.api.nvim_set_keymap('n', key, '<Nop>', { noremap = true, silent = true })
+end
+
+-- Re-add only the fold commands you want
+vim.keymap.set('n', 'za', 'za', { desc = 'Toggle fold' })
+vim.keymap.set('n', 'zc', 'zc', { desc = 'Close fold' })
+vim.keymap.set('n', 'zo', 'zo', { desc = 'Open fold' })
+vim.keymap.set('n', 'zM', 'zM', { desc = 'Close all folds' })
+vim.keymap.set('n', 'zR', 'zR', { desc = 'Open all folds' })
+
+local augroup = vim.api.nvim_create_augroup('FoldPersistence', { clear = true })
+
+vim.api.nvim_create_autocmd('BufWinLeave', {
+  group = augroup,
+  pattern = '*.*',
+  command = 'mkview',
+})
+
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  group = augroup,
+  pattern = '*.*',
+  command = 'silent! loadview',
+})
+
 -- Save undo history
 vim.o.undofile = true
 
@@ -721,7 +792,7 @@ require('lazy').setup({
         sh = { 'shfmt' },
         yaml = { 'yamlfmt' },
         toml = { 'taplo' },
-        markdown = { 'prettierd' }, -- you can add prettier here too
+        markdown = { 'prettierd' },
       },
     },
   },
@@ -895,12 +966,6 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
-vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
-  group = vim.api.nvim_create_augroup('file_open_commands', { clear = true }),
-  pattern = { '*' }, -- Pattern is a table in Lua
-  command = ':Twilight',
-})
 
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.expand '~/.config/nvim/undo//'
