@@ -351,7 +351,16 @@ require('lazy').setup({
   {
     'lewis6991/gitsigns.nvim',
     config = function()
-      require('gitsigns').setup {}
+      require('gitsigns').setup {
+        numhl = true,
+        word_diff = true,
+        current_line_blame = true,
+        current_line_blame_opts = {
+          virtual_text = true,
+          virt_text_pos = 'eol',
+          delay = 1000,
+        },
+      }
     end,
   },
   --
