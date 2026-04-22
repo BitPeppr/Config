@@ -8,3 +8,19 @@
 nvim/backup/*
 nvim/swap/*
 nvim/undo/*
+
+
+
+
+# Private folders, e.g. with api keys, credentials, etc.
+gh/
+github-copilot/
+kilo/
+nanobot/
+omniroute/
+Omniroute-backup/
+opencode/
+rabbithole/
+rclone/
+providers.yaml
+mole/
