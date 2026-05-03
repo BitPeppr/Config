@@ -1,0 +1,1 @@
+abbr "usb_backup"="rsync -avzP --delete --exclude='.DS_Store' --exclude='._*' --exclude='.Spotlight-V100' --exclude='.Trashes' --exclude='.fseventsd' --exclude='.TemporaryItems' --exclude='.DocumentRevisions-V100' '/Volumes/Extreme SSD/' oracle-vps-2:/home/ubuntu/Backup"
