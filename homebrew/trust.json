@@ -1,0 +1,36 @@
+{
+  "trustedformulae": [
+    "asmvik/formulae/skhd",
+    "asmvik/formulae/yabai",
+    "bjarneo/cliamp/cliamp",
+    "bro3886/tap/ical",
+    "felixkratz/formulae/borders",
+    "felixkratz/formulae/sketchybar"
+  ],
+  "trustedtaps": [
+    "alexsjones/llmfit",
+    "anomalyco/tap",
+    "antoniorodr/memo",
+    "arthur-ficial/tap",
+    "asmvik/formulae",
+    "bitpeppr/formulae",
+    "bjarneo/cliamp",
+    "bloznelis/tap",
+    "bro3886/tap",
+    "charmbracelet/tap",
+    "felixkratz/formulae",
+    "gromgit/brewtils",
+    "jandedobbeleer/oh-my-posh",
+    "kilo-org/tap",
+    "krishkrosh/apps",
+    "nikitabobko/tap",
+    "osx-cross/arm",
+    "osx-cross/avr",
+    "qmk/qmk",
+    "sorkila/lockpaw",
+    "steipete/tap",
+    "textualize/homebrew",
+    "theboredteam/boring-notch",
+    "tonisives/tap"
+  ]
+}

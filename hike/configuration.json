@@ -1,0 +1,25 @@
+{
+    "theme": null,
+    "navigation_visible": true,
+    "navigation_on_right": false,
+    "markdown_extensions": [
+        ".md",
+        ".markdown"
+    ],
+    "markdown_content_types": [
+        "text/plain",
+        "text/markdown",
+        "text/x-markdown"
+    ],
+    "command_line_on_top": false,
+    "main_branches": [
+        "main",
+        "master"
+    ],
+    "obsidian_vaults": "~/Library/Mobile Documents/iCloud~md~obsidian/Documents",
+    "local_start_location": "~",
+    "bindings": {},
+    "focus_viewer_on_load": true,
+    "show_front_matter": true,
+    "allow_traditional_quit": false
+}

@@ -136,48 +136,6 @@ vim.opt.concealcursor = 'nc'
 -- Colourscheme
 vim.cmd 'colorscheme retrobox'
 
--- Unmap all built-in z commands (use raw API to avoid vim.keymap.del E31 error)
-for _, key in ipairs {
-  'za',
-  'zA',
-  'zb',
-  'zc',
-  'zC',
-  'zd',
-  'zD',
-  'ze',
-  'zE',
-  'zf',
-  'zF',
-  'zg',
-  'zG',
-  'zh',
-  'zH',
-  'zi',
-  'zI',
-  'zj',
-  'zk',
-  'zl',
-  'zL',
-  'zm',
-  'zM',
-  'zn',
-  'zo',
-  'zO',
-  'zp',
-  'zr',
-  'zR',
-  'zs',
-  'zt',
-  'zv',
-  'zw',
-  'zx',
-  'zX',
-  'zz',
-} do
-  vim.api.nvim_set_keymap('n', key, '<Nop>', { noremap = true, silent = true })
-end
-
 -- Re-add only the fold commands you want
 vim.keymap.set('n', 'za', 'za', { desc = 'Toggle fold' })
 vim.keymap.set('n', 'zc', 'zc', { desc = 'Close fold' })

@@ -8,6 +8,9 @@ return {
   ---@module 'render-markdown'
   ---@type render.md.UserConfig
   opts = {
+    pipe_table = {
+      enabled = false,
+    },
     completions = {
       lsp = {
         enabled = true,

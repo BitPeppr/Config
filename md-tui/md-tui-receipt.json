@@ -1,0 +1,1 @@
+{"binaries":["mdt"],"binary_aliases":{},"install_prefix":"/Users/martinchen/.cargo","provider":{"source":"cargo-dist","version":"0.15.0"},"source":{"app_name":"md-tui","name":"md-tui","owner":"henriklovhaug","release_type":"github"},"version":"0.8.1"}
